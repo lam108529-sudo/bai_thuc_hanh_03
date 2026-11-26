@@ -1,0 +1,98 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+typedef struct{
+	char tenxe[50];
+	char bienso[20];
+	int sobai;
+	int sohang;
+	int vitri;
+} Car;
+
+typedef struct node{
+	Car data;
+	struct node *pre;
+	struct node *next;
+} node;
+
+typedef struct{
+	node *head;
+	node *tail;
+} LinkedList;
+
+void initList(LinkedList *ds){
+	ds->head=NULL;
+	ds->tail=NULL;
+}
+node *createNode(Car c){
+	node *p=(node*)malloc(sizeof(node));
+	if(p==NULL){
+		printf("khong cap du bo nho!");
+		exit(1);
+	}
+	else{
+		p->data=c;
+		p->pre=NULL;
+		p->next=NULL;
+		return p;
+	}
+}
+
+void insertLast(LinkedList *ds,Car c){
+	node *p=createNode(c);
+	if(ds->head==NULL){
+		ds->head=ds->tail=p;
+	}
+	else{
+		ds->tail->next=p;
+		p->pre=ds->tail;
+		ds->tail=p;
+	}
+}
+void nhap(LinkedList *ds){
+	printf("Nhap so xe vao bai: ");
+	int n;
+	scanf("%d",&n);
+	for(int i=0;i<n;i++){
+		Car c;
+		fflush(stdin);
+		printf("Nhap ten xe: ");	
+		fgets(c.tenxe,sizeof(c.tenxe),stdin);
+		c.tenxe[strcspn(c.tenxe,"\n")]='\0';
+		printf("Nhap bien so xe: ");
+		fgets(c.bienso,sizeof(c.bienso),stdin);
+		c.bienso[strcspn(c.bienso,"\n")]='\0';
+		printf("Nhap so bai: ");
+		scanf("%d",&c.sobai);
+		printf("Nhap so hang va vi tri: ");
+		scanf("%d %d",&c.sohang, &c.vitri);
+		insertLast(ds,c);
+	}
+}
+
+void in(LinkedList *ds){
+	if(ds->head==NULL){
+		printf("Dah sach rong!");
+		return;
+	}
+	else{
+		printf("\n%-20s %-12s %-8s %-8s %-8s\n","Ten xe", "Bien so xe", "So bai", "So hang", "Vi tri");
+		for(node *p=ds->head;p!=NULL;p=p->next){
+			printf("%-20s %-12s %-8d %-8d %-8d\n",p->data.tenxe, p->data.bienso, p->data.sobai, p->data.sohang, p->data.vitri);
+		}
+		for(node *p=ds->tail;p!NULL;p=p->next){
+			printf("%-20s %-12s %-8d %-8d %-8d\n",p->data.tenxe, p->data.bienso, p->data.sobai, p->data.sohang, p->data.vitri);
+		}
+	}
+}
+int main(){
+	LinkedList ds;
+	initList(&ds);
+	nhap(&ds);
+	printf("\n");
+	printf("Thong tin cac xe trong bai do xe la\n ");
+	printf("\n");
+	in(&ds);
+	return 0;
+}
