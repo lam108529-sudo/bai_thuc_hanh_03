@@ -1,0 +1,87 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+typedef struct{
+    char hoten[50];
+    char ma[20];
+    float d1;
+    float d2;
+    float d3;
+} SinhVien;
+typedef struct node{
+    SinhVien data;
+    struct node *pre;
+    struct node *next;
+} node;
+
+typedef struct{
+    node *head;
+    node *tail;
+} LinkedList;
+void initList(LinkedList *ds){
+	ds->head=NULL;
+	ds->tail=NULL;
+}
+node* createNode(SinhVien sv){
+	node *p=(node*)malloc(sizeof(node));
+	if(p==NULL){
+		printf("Khong cap du bo nho!\n");
+		exit(1);
+	}
+	else{
+		p->data=sv;
+		p->pre=NULL;
+		p->next=NULL;
+		return p;
+	}
+}
+void insertLast(LinkedList *ds, SinhVien sv){
+	node *p=createNode(sv);
+	if(ds->head==NULL){
+		ds->head=ds->tail=p;
+	}
+	else{
+		ds->tail->next=p;
+		p->pre=ds->tail;
+		ds->tail=p;
+	}
+}
+void nhap(LinkedList *ds){
+	printf("Nhap so sinh vien: ");
+	int n;
+	scanf("%d",&n);
+	for(int i=0;i<n;i++){
+		SinhVien sv;
+		int j=i+1;
+		printf("Nhap sinh vien thu: %d\n",j);
+		fflush(stdin);
+		printf("Ho ten: ");
+		fgets(sv.hoten,sizeof(sv.hoten),stdin);
+		sv.hoten[strcspn(sv.hoten,"\n")]='\0';
+		printf("Nhap ma sinh vien: ");
+		fgets(sv.ma,sizeof(sv.ma),stdin);
+		sv.ma[strcspn(sv.ma,"\n")]='\0';
+		printf("Nhap diem 3 mon d1, d2, d3: ");
+		scanf("%f %f %f",&sv.d1, &sv.d2, &sv.d3);
+		insertLast(ds,sv);	
+	}	
+}
+void in(LinkedList *ds){
+	if(ds->head==NULL){
+		printf("Danh sach rong!");
+		return;
+	}
+	else{
+		printf("\%-25s %-12s %-8s %-8s %-8s\n", "Ho ten", "Ma sv", "Diem 1", "Diem 2", "Diem 3"); 
+    	for(node *p=ds->head;p!=NULL;p=p->next){
+        	printf("%-25s %-12s %-8.2f %-8.2f %-8.2f\n", p->data.hoten, p->data.ma, p->data.d1, p->data.d2, p->data.d3);
+    	}
+	}
+}
+int main(){
+    LinkedList ds;
+    initList(&ds);
+    nhap(&ds);
+    in(&ds);
+    return 0;
+}
